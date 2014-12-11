@@ -5,7 +5,7 @@ LeapMotion leap;
 float leap_hand_bottom = 0;
 Hand leap_hand;
 boolean leap_handset = false;
-float handX, handY, handZ, centerX, centerY;
+float handX, handY, handZ, prevHandX, prevHandY, centerX, centerY;
 // center noch genutzt? wird doch gar nicht mehr gebraucht, da nur bottom + bottomtop interessant ist — 11.12.14 19:33  
 
 float bottom = 0;
@@ -18,12 +18,14 @@ boolean exitBottom = false;
 boolean exitBottomXSet = false;
 float exitBottomX = 0;
 
+float exitDistance = 0;
+float exitDistanceX = 0;
+float exitDistanceY = 0;
 
 
 float distance = 0;
 float distanceX = 0;
 float distanceY = 0;
-
 float prevDistance = 0;
 float prevDistanceX = 0;
 float prevDistanceY = 0;
@@ -100,6 +102,10 @@ void draw() {
   prevDistanceX = distanceX;
   prevDistanceY = distanceY;
   
+  prevHandX = handX;
+  prevHandY = handY;
+
+  
 }
 
 void initializingValues(){
@@ -121,7 +127,6 @@ void writingValues(){
   text(" y // "  + handY, 20, 60);
   text(" z // "  + handZ, 20, 80);
   
-  text(" exitX // "  + exitBottomX, 20, 110); 
 }
 
 
@@ -130,6 +135,11 @@ void writingValues(){
 
 void setControlValues(){
   
+
+  distance = dist(prevHandX, prevHandY, handX, handY);
+  distanceX = prevHandX - handX;
+  distanceY = prevHandY - handY;
+
   
   if(handY < bottomTop && !exitBottom){
     exitBottom = true;
@@ -146,9 +156,9 @@ void setControlValues(){
   }
   
   if(exitBottomXSet){
-    distance = dist(exitBottomX, bottomTop, handX, handY);
-    distanceX = exitBottomX - handX;
-    distanceY = bottomTop - handY;
+    exitDistance = dist(exitBottomX, bottomTop, handX, handY);
+    exitDistanceX = exitBottomX - handX;
+    exitDistanceY = bottomTop - handY;
   }
 }
 
@@ -163,10 +173,14 @@ void calcSpeeds(){
   float diffDistanceX = abs(distanceX - prevDistanceX);
   float diffDistanceY = abs(distanceY - prevDistanceY);
   
+  if(diffDistance < 2){
+    diffDistance = 0;
+  }
+  
   speed = round((diffDistance / diffTime)*1000);
   speedArray.append(speed);
   
-  float avgHelper = 0;    
+  float avgHelper = 1;    
   if(speedArray.size() > 10){
     for(int i = 1; i < 10; i++){
       avgHelper += speedArray.get(speedArray.size() - i);
@@ -211,12 +225,17 @@ void drawHelperLines(){
   }
   
   fill(0, 0, 0, 90);
-  ellipse(exitBottomX, bottomTop, 3, 3);
-  
+  if(exitBottomXSet){
+    ellipse(exitBottomX, bottomTop, 3, 3);
+  }
   fill(255, 0, 0);
-  text(" distance // "  + distance, 20, 190);
-  text(" distanceX // "  + distanceX, 20, 210);
-  text(" distanceY // "  + distanceY, 20, 230);
+  
+  if(exitBottomXSet){
+    text(" exitX // "  + exitBottomX, 20, 110); 
+    text(" exitDistance // "  + exitDistance, 20, 130);
+    text(" exitDistanceX // "  + exitDistanceX, 20, 150);
+    text(" exitDistanceY // "  + exitDistanceY, 20, 170);
+  }
   
   text(" speed // "  + speed, 20, 260);
   text(" avgSpeed // "  + avgSpeed, 20, 280);
