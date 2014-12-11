@@ -24,7 +24,6 @@ void setup() {
 }
 
 void draw() {
-  background(255);
   // int fps = leap.getFrameRate();
   
   setHands();
@@ -48,7 +47,7 @@ void draw() {
     text(" z // "  + handZ, 20, 80);
     
     
-    
+    fill(255, 0, 0, 20);
     ellipse(handX, handY, handZ, handZ);
     
     //leap_hand.leap_hand.getPosition().x;    
