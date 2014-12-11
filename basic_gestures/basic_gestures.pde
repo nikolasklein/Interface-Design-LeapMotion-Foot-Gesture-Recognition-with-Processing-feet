@@ -35,12 +35,32 @@ int prevTime = 0;
 // using an array of speeds to calculate averagespeed
 FloatList speedArray;
 
+float speed = 0;
+
 // avgSpeed is the overall avgSpeed — the latest is used for the most recent avgSpeed to get the latest changes
 float avgSpeed = 0;
 float avgSpeedLatest = 0;
 
 float exitSpeed = 0;
 boolean saveSpeed = false;
+
+//####
+//Whats still missing in speed:
+//- speed of x and y
+//- they can be used to better catch some problems with gesture recognition. if the speedX is significantly larger than the speedY, then the latter is probably not important at all, because a gesture on the x-axis is in progress
+
+String direction = "";
+String directionX = "";
+String directionY = "";
+
+float lastPosXDirection = 0;
+float lastPosYDirection = 0;
+
+float distanceDirectionX = 0;
+float distanceDirectionY = 0;
+
+float directionXNoMove = 0;
+float directionYNoMove = 0;
 
 
 
@@ -66,117 +86,13 @@ void draw() {
   // anzeigen der werte
   if (leap_handset) {
     
-    //ummappen der werte aufgrund der umgekehrten leap motion 
-    handX = round(map(leap_hand.getPosition().x, 500, 0, 0, width));
-    handY = round(map(leap_hand.getPosition().y, 200, 600, height, 0));
-    handZ = round(leap_hand.getPosition().z);
-    
-    if(lowest < handY){
-      lowest = handY;
-    }
-    
-    text(" x // "  + handX, 20, 40);
-    text(" y // "  + handY, 20, 60);
-    text(" z // "  + handZ, 20, 80);
-    
-    text(" centerX // "  + centerX, 20, 110);
-    text(" centerY // "  + centerY, 20, 130);
-    
-    //bottom is actually the highest value, because the leap motion is turned around
-    text(" lowest // "  + lowest, 20, 160);
-    
-    
-    //setting control values
-    if(handY < bottomTop && !exitBottom){
-      exitBottom = true;
-      saveSpeed  = true;
-    }else if(handY >= bottomTop && exitBottom){
-      exitBottom = false;
-      exitBottomXSet = false;
-      saveSpeed = true;
-    }
-    
-    if(exitBottom && !exitBottomXSet){
-      exitBottomXSet = true;
-      exitBottomX = handX;
-    }
-    
-    if(exitBottomXSet){
-      distance = dist(exitBottomX, bottomTop, handX, handY);
-      distanceX = exitBottomX - handX;
-      distanceY = bottomTop - handY;
-    }
-
-    //calculating the speeds
-    
-    float diffTime = time - prevTime;
-    
-    float diffDistance = abs(distance - prevDistance);
-    float diffDistanceX = abs(distanceX - prevDistanceX);
-    float diffDistanceY = abs(distanceY - prevDistanceY);
-    
-    float speed = round((diffDistance / diffTime)*1000);
-    speedArray.append(speed);
-    
-    float avgHelper = 0;    
-    if(speedArray.size() > 10){
-      for(int i = 1; i < 10; i++){
-        avgHelper += speedArray.get(speedArray.size() - i);
-      }
-    }
-    avgSpeed = avgHelper / 10;
-    
-    avgHelper = 0;
-    if(speedArray.size() > 2){
-      for(int i = 1; i < 2; i++){
-        avgHelper += speedArray.get(speedArray.size() - i);
-      }
-    }
-    avgSpeedLatest = avgHelper / 2;
-    
-    if(saveSpeed){
-      saveSpeed = false;
-      exitSpeed = avgSpeedLatest;
-    }
-    
-
-    // creating help-lines
-    fill(255, 0, 0);
-    ellipse(handX, handY, 10, 10);
-    
-    
-    
-    //creating lines
-    if(bottom != 0){
-      stroke(0, 0, 0, 30);
-      line(0, bottomTop, width, bottomTop);
-      stroke(0, 0, 0, 70);
-      line(0, bottom, width, bottom);
-      
-      stroke(0, 0, 0, 20);
-      line(0, lowest, width, lowest);
-      
-    }
-    
-    if(exitBottomXSet){
-      fill(0, 0, 0, 90);
-      ellipse(exitBottomX, bottomTop, 3, 3);
-      
-      fill(255, 0, 0);
-      text(" distance // "  + distance, 20, 190);
-      text(" distanceX // "  + distanceX, 20, 210);
-      text(" distanceY // "  + distanceY, 20, 230);
-      
-      text(" speed // "  + speed, 20, 260);
-      text(" avgSpeed // "  + avgSpeed, 20, 280);
-      text(" avgSpeedLatest // "  + avgSpeedLatest, 20, 300);
-      text(" breakSpeed // "  + exitSpeed, 20, 320);      
-      //need the enter and exit points
-
-      
-    }
-    
-        
+    initializingValues();
+    writingValues();
+    setControlValues();
+    calcSpeeds();
+    calcDirections();
+    drawHelperLines();
+ 
   }
   
   prevTime = time;
@@ -185,6 +101,187 @@ void draw() {
   prevDistanceY = distanceY;
   
 }
+
+void initializingValues(){
+  //ummappen der werte aufgrund der umgekehrten leap motion 
+  handX = round(map(leap_hand.getPosition().x, 500, 0, 0, width));
+  handY = round(map(leap_hand.getPosition().y, 200, 600, height, 0));
+  handZ = round(leap_hand.getPosition().z);
+  
+  if(lowest < handY){
+    lowest = handY;
+  }
+}
+
+
+
+
+void writingValues(){
+  text(" x // "  + handX, 20, 40);
+  text(" y // "  + handY, 20, 60);
+  text(" z // "  + handZ, 20, 80);
+  
+  text(" exitX // "  + exitBottomX, 20, 110); 
+}
+
+
+
+
+
+void setControlValues(){
+  
+  
+  if(handY < bottomTop && !exitBottom){
+    exitBottom = true;
+    saveSpeed  = true;
+  }else if(handY >= bottomTop && exitBottom){
+    exitBottom = false;
+    exitBottomXSet = false;
+    saveSpeed = true;
+  }
+  
+  if(exitBottom && !exitBottomXSet){
+    exitBottomXSet = true;
+    exitBottomX = handX;
+  }
+  
+  if(exitBottomXSet){
+    distance = dist(exitBottomX, bottomTop, handX, handY);
+    distanceX = exitBottomX - handX;
+    distanceY = bottomTop - handY;
+  }
+}
+
+
+
+
+void calcSpeeds(){
+//calculating the speeds 
+  float diffTime = time - prevTime;
+  
+  float diffDistance = abs(distance - prevDistance);
+  float diffDistanceX = abs(distanceX - prevDistanceX);
+  float diffDistanceY = abs(distanceY - prevDistanceY);
+  
+  speed = round((diffDistance / diffTime)*1000);
+  speedArray.append(speed);
+  
+  float avgHelper = 0;    
+  if(speedArray.size() > 10){
+    for(int i = 1; i < 10; i++){
+      avgHelper += speedArray.get(speedArray.size() - i);
+    }
+  }
+  avgSpeed = avgHelper / 10;
+  
+  avgHelper = 0;
+  if(speedArray.size() > 2){
+    for(int i = 1; i < 2; i++){
+      avgHelper += speedArray.get(speedArray.size() - i);
+    }
+  }
+  avgSpeedLatest = avgHelper / 2;
+  
+  float avgSpeedBetter = (avgSpeedLatest + avgSpeed) / 2;
+  
+  if(saveSpeed){
+    saveSpeed = false;
+    exitSpeed = avgSpeedBetter;
+  }
+}
+
+
+void drawHelperLines(){
+// creating help-lines
+  fill(255, 0, 0);
+  ellipse(handX, handY, 10, 10);
+  
+  
+  
+  //creating lines
+  if(bottom != 0){
+    stroke(0, 0, 0, 30);
+    line(0, bottomTop, width, bottomTop);
+    stroke(0, 0, 0, 70);
+    line(0, bottom, width, bottom);
+    
+    stroke(0, 0, 0, 20);
+    line(0, lowest, width, lowest);
+    
+  }
+  
+  if(exitBottomXSet){
+    fill(0, 0, 0, 90);
+    ellipse(exitBottomX, bottomTop, 3, 3);
+    
+    fill(255, 0, 0);
+    text(" distance // "  + distance, 20, 190);
+    text(" distanceX // "  + distanceX, 20, 210);
+    text(" distanceY // "  + distanceY, 20, 230);
+    
+    text(" speed // "  + speed, 20, 260);
+    text(" avgSpeed // "  + avgSpeed, 20, 280);
+    text(" avgSpeedLatest // "  + avgSpeedLatest, 20, 300);
+    text(" breakSpeed // "  + exitSpeed, 20, 320);      
+    //need the enter and exit points
+  
+    
+  }
+}
+
+
+void calcDirections(){
+  
+  
+  if(frameCount % 5 == 0){
+    lastPosXDirection = handX;
+    lastPosYDirection = handY;
+  }
+  
+  distanceDirectionX = lastPosXDirection - handX;
+  distanceDirectionY = lastPosYDirection - handY;
+
+  text(" distanceDirectionX // "  + distanceDirectionX, 20, 370);
+  text(" distanceDirectionY // "  + distanceDirectionY, 20, 390);
+  
+  if(distanceDirectionX < -5){
+    directionX = "rechts";
+    directionXNoMove = 0;  
+  }else if(distanceDirectionX > 5){
+    directionX = "links";
+    directionXNoMove = 0;
+  }else if(distanceDirectionX > -2 && distanceDirectionX < 2){
+    directionXNoMove++;
+  }
+  
+  if(directionXNoMove > 20){
+    directionX = "still";
+  }
+  
+  text(" directionX // "  + directionX, 20, 420);
+  
+  if(distanceDirectionY < -5){
+    directionY = "unten";
+    directionYNoMove = 0;
+  }else if(distanceDirectionY > 5){
+    directionY = "oben";
+    directionYNoMove = 0;
+  }else if(distanceDirectionY > -2 && distanceDirectionY < 2){
+    directionYNoMove++;
+  }
+  
+  if(directionYNoMove > 20){
+    directionY = "still";
+  }
+  
+  text(" directionY // "  + directionY, 20, 440);
+  
+  
+}
+
+
+
+
 
 void keyPressed() {
   if (key == ' ') {
