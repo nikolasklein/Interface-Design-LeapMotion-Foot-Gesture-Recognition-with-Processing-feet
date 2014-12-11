@@ -8,6 +8,7 @@ boolean leap_handset = false;
 float handX, handY, handZ, centerX, centerY;
 
 float bottom = 0;
+float bottomTop = 0;
 float bottomHeight = 50;
 
 float lowest = 0;
@@ -15,6 +16,10 @@ float lowest = 0;
 boolean exitBottom = false;
 boolean exitBottomXSet = false;
 float exitBottomX = 0;
+
+float distance = 0;
+float distanceX = 0;
+float distanceY = 0;
 
 
 
@@ -60,11 +65,8 @@ void draw() {
     text(" lowest // "  + lowest, 20, 160);
     
     
-
-    fill(255, 0, 0);
-    ellipse(handX, handY, 10, 10);
-    
-    if(handY < bottom-bottomHeight){
+    //setting control values
+    if(handY < bottomTop){
       exitBottom = true;
     }else{
       exitBottom = false;
@@ -76,15 +78,25 @@ void draw() {
       exitBottomX = handX;
     }
     
-    if(centerX != 0){
-      fill(0, 0, 0);
-      ellipse(centerX, centerY, 5, 5);
+    if(exitBottomXSet){
+      distance = dist(exitBottomX, bottomTop, handX, handY);
+      distanceX = exitBottomX - handX;
+      distanceY = bottomTop - handY;
     }
+
+
+    // creating help-lines
+    fill(255, 0, 0);
+    ellipse(handX, handY, 10, 10);
+    
+    
+    
+    //creating lines
     
     
     if(bottom != 0){
       stroke(0, 0, 0, 40);
-      line(0, bottom-bottomHeight, width, bottom-bottomHeight);
+      line(0, bottomTop, width, bottomTop);
       stroke(0, 0, 0, 50);
       line(0, bottom, width, bottom);
       
@@ -93,14 +105,20 @@ void draw() {
     }
     
     if(exitBottomXSet){
-      fill(0, 0, 0, 50);
-      ellipse(exitBottomX, bottom-bottomHeight, 2, 2);
+      fill(0, 0, 0, 90);
+      ellipse(exitBottomX, bottomTop, 3, 3);
+      
+      stroke(255, 0, 0);
+      text(" distance // "  + distance, 20, 190);
+      text(" distanceX // "  + distanceX, 20, 210);
+      text(" distanceY // "  + distanceY, 20, 230);
+      
     }
     
         
   }
 
-}// END DRAW
+}
 
 void keyPressed() {
   if (key == ' ') {
@@ -108,6 +126,7 @@ void keyPressed() {
       centerX = handX;
       centerY = handY;
       bottom = centerY;
+      bottomTop = bottom-bottomHeight;
     }
   }
 }
