@@ -210,23 +210,22 @@ void drawHelperLines(){
     
   }
   
-  if(exitBottomXSet){
-    fill(0, 0, 0, 90);
-    ellipse(exitBottomX, bottomTop, 3, 3);
-    
-    fill(255, 0, 0);
-    text(" distance // "  + distance, 20, 190);
-    text(" distanceX // "  + distanceX, 20, 210);
-    text(" distanceY // "  + distanceY, 20, 230);
-    
-    text(" speed // "  + speed, 20, 260);
-    text(" avgSpeed // "  + avgSpeed, 20, 280);
-    text(" avgSpeedLatest // "  + avgSpeedLatest, 20, 300);
-    text(" breakSpeed // "  + exitSpeed, 20, 320);      
-    //need the enter and exit points
+  fill(0, 0, 0, 90);
+  ellipse(exitBottomX, bottomTop, 3, 3);
   
-    
-  }
+  fill(255, 0, 0);
+  text(" distance // "  + distance, 20, 190);
+  text(" distanceX // "  + distanceX, 20, 210);
+  text(" distanceY // "  + distanceY, 20, 230);
+  
+  text(" speed // "  + speed, 20, 260);
+  text(" avgSpeed // "  + avgSpeed, 20, 280);
+  text(" avgSpeedLatest // "  + avgSpeedLatest, 20, 300);
+  text(" breakSpeed // "  + exitSpeed, 20, 320);      
+  //need the enter and exit points
+
+  
+
 }
 
 
