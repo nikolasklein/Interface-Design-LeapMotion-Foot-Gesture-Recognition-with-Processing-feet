@@ -6,6 +6,7 @@ float leap_hand_bottom = 0;
 Hand leap_hand;
 boolean leap_handset = false;
 float handX, handY, handZ, centerX, centerY;
+// center noch genutzt? wird doch gar nicht mehr gebraucht, da nur bottom + bottomtop interessant ist — 11.12.14 19:33  
 
 float bottom = 0;
 float bottomTop = 0;
@@ -17,10 +18,29 @@ boolean exitBottom = false;
 boolean exitBottomXSet = false;
 float exitBottomX = 0;
 
+
+
 float distance = 0;
 float distanceX = 0;
 float distanceY = 0;
 
+float prevDistance = 0;
+float prevDistanceX = 0;
+float prevDistanceY = 0;
+
+int time = 0;
+int prevTime = 0;
+
+
+// using an array of speeds to calculate averagespeed
+FloatList speedArray;
+
+// avgSpeed is the overall avgSpeed — the latest is used for the most recent avgSpeed to get the latest changes
+float avgSpeed = 0;
+float avgSpeedLatest = 0;
+
+float exitSpeed = 0;
+boolean saveSpeed = false;
 
 
 
@@ -31,18 +51,19 @@ void setup() {
   leap = new LeapMotion(this);
   rectMode(CENTER);
   
-  
+  speedArray = new FloatList();
+
 }
 
 void draw() {
   // int fps = leap.getFrameRate();
+  time = millis();
   noStroke();
   background(255, 255, 255);
   
   setHands();
 
   // anzeigen der werte
-  // zum besseren tracken wird hier eine hand drangeklebt
   if (leap_handset) {
     
     //ummappen der werte aufgrund der umgekehrten leap motion 
@@ -66,11 +87,13 @@ void draw() {
     
     
     //setting control values
-    if(handY < bottomTop){
+    if(handY < bottomTop && !exitBottom){
       exitBottom = true;
-    }else{
+      saveSpeed  = true;
+    }else if(handY >= bottomTop && exitBottom){
       exitBottom = false;
       exitBottomXSet = false;
+      saveSpeed = true;
     }
     
     if(exitBottom && !exitBottomXSet){
@@ -84,6 +107,38 @@ void draw() {
       distanceY = bottomTop - handY;
     }
 
+    //calculating the speeds
+    
+    float diffTime = time - prevTime;
+    
+    float diffDistance = abs(distance - prevDistance);
+    float diffDistanceX = abs(distanceX - prevDistanceX);
+    float diffDistanceY = abs(distanceY - prevDistanceY);
+    
+    float speed = round((diffDistance / diffTime)*1000);
+    speedArray.append(speed);
+    
+    float avgHelper = 0;    
+    if(speedArray.size() > 10){
+      for(int i = 1; i < 10; i++){
+        avgHelper += speedArray.get(speedArray.size() - i);
+      }
+    }
+    avgSpeed = avgHelper / 10;
+    
+    avgHelper = 0;
+    if(speedArray.size() > 2){
+      for(int i = 1; i < 2; i++){
+        avgHelper += speedArray.get(speedArray.size() - i);
+      }
+    }
+    avgSpeedLatest = avgHelper / 2;
+    
+    if(saveSpeed){
+      saveSpeed = false;
+      exitSpeed = avgSpeedLatest;
+    }
+    
 
     // creating help-lines
     fill(255, 0, 0);
@@ -92,32 +147,43 @@ void draw() {
     
     
     //creating lines
-    
-    
     if(bottom != 0){
-      stroke(0, 0, 0, 40);
+      stroke(0, 0, 0, 30);
       line(0, bottomTop, width, bottomTop);
-      stroke(0, 0, 0, 50);
+      stroke(0, 0, 0, 70);
       line(0, bottom, width, bottom);
       
       stroke(0, 0, 0, 20);
       line(0, lowest, width, lowest);
+      
     }
     
     if(exitBottomXSet){
       fill(0, 0, 0, 90);
       ellipse(exitBottomX, bottomTop, 3, 3);
       
-      stroke(255, 0, 0);
+      fill(255, 0, 0);
       text(" distance // "  + distance, 20, 190);
       text(" distanceX // "  + distanceX, 20, 210);
       text(" distanceY // "  + distanceY, 20, 230);
+      
+      text(" speed // "  + speed, 20, 260);
+      text(" avgSpeed // "  + avgSpeed, 20, 280);
+      text(" avgSpeedLatest // "  + avgSpeedLatest, 20, 300);
+      text(" breakSpeed // "  + exitSpeed, 20, 320);      
+      //need the enter and exit points
+
       
     }
     
         
   }
-
+  
+  prevTime = time;
+  prevDistance = distance;
+  prevDistanceX = distanceX;
+  prevDistanceY = distanceY;
+  
 }
 
 void keyPressed() {
