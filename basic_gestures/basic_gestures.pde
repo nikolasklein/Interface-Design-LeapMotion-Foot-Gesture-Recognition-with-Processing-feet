@@ -19,6 +19,8 @@ void setup() {
 
   leap = new LeapMotion(this);
   rectMode(CENTER);
+  
+  
 }
 
 void draw() {
@@ -33,6 +35,7 @@ void draw() {
   
 
   // anzeigen der werte
+  // zum besseren tracken wird hier eine hand drangeklebt
   if (leap_handset) {
     
     //ummappen der werte aufgrund der umgekehrten leap motion 
