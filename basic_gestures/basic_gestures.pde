@@ -47,8 +47,8 @@ void draw() {
     text(" z // "  + handZ, 20, 80);
     
     
-    fill(255, 0, 0, 20);
-    ellipse(handX, handY, handZ, handZ);
+    fill(255, 0, 0, 50);
+    ellipse(handX, handY, 2, 2);
     
     //leap_hand.leap_hand.getPosition().x;    
   }
