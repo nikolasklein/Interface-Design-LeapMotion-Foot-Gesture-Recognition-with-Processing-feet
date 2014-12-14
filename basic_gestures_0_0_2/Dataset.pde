@@ -1,3 +1,4 @@
+// Object containing the spacial information of one frame
 class Dataset {
   boolean tracked;
   int time;

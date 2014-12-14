@@ -1,3 +1,4 @@
+  // Read the data from the Hand object and put it into a Dataset
 void readData() {
    float posX, posY, posZ;
    

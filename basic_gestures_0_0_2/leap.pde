@@ -1,3 +1,4 @@
+// Leap motion stuff
 void leapOnInit() {
   println("Leap Motion Init");
 }

@@ -3,6 +3,7 @@ void printVis() {
 
   // Diplay a warning if there is no hand visible
   if (!leap_hand_isset) {
+    textSize(14);
     noStroke();
     fill(255, 0, 0);
     rectMode(CORNER);

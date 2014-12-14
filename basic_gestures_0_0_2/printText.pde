@@ -1,11 +1,13 @@
 // Display the collected information as text
 
 int textPositionY = 70;
-int textLineHeight = 20;
+int textLineHeight = 24;
 
 void printText() {
   fill(0);
   textAlign(LEFT);
+  textSize(14);
+
 
   textPositionY = 70;
   textLineHeight = 20;
@@ -14,12 +16,12 @@ void printText() {
     printFrames();
   }
 
-  if (showCurrent) {
-    printCurrent();
-  }
-
   if (showDatasets) {
     printDatasets();
+  }
+
+  if (showCurrent) {
+    printCurrent();
   }
 
   if (showGestures) {
@@ -91,26 +93,26 @@ void printGestures() {
   textPositionY += textLineHeight;
 
   if (datasets.size() > 0) {
-    text("noMoveXCount: "  + noMoveXCount, 20, textPositionY);
+    text("directionX: "  + directionX, 20, textPositionY);
+    textPositionY += textLineHeight; 
+
+    text("noX.counter: "  + noX.counter, 20, textPositionY);
     textPositionY += textLineHeight;
 
-    text("noMoveYCount: "  + noMoveYCount, 20, textPositionY);
+    text("left.counter: "  + left.counter, 20, textPositionY);
     textPositionY += textLineHeight;
 
-    text("goingLeftCounter: "  + leftCounter, 20, textPositionY);
+    text("left.buffer: "  + left.buffer, 20, textPositionY);
     textPositionY += textLineHeight;
 
-    text("goingLeftCounterBuffer: "  + leftCounterBuffer, 20, textPositionY);
+    text("right.counter: "  + right.counter, 20, textPositionY);
     textPositionY += textLineHeight;
 
-    text("goingRightCounter: "  + rightCounter, 20, textPositionY);
+    text("right.buffer: "  + right.buffer, 20, textPositionY);
     textPositionY += textLineHeight;
 
-    text("goingRightCounterBuffer: "  + rightCounterBuffer, 20, textPositionY);
+    text("gesture: "  + gesture.gesture, 20, textPositionY);
     textPositionY += textLineHeight;
-  } else {
-    text("No data", 20, textPositionY);
-    textPositionY += textLineHeight * 2;
   }
 }
 
