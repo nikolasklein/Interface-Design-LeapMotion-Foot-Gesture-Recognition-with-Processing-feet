@@ -3,26 +3,27 @@ LeapMotion leap;
 
 // General vars
 int time = 0;
-int noMoveXCount;
-int noMoveYCount;
 
 Dataset dataset;
 Dataset datasetPrev;
 ArrayList<Dataset> datasets = new ArrayList<Dataset>();
 
+// Movements
+String movementX;
+ArrayList<Movement> movementXHistory = new ArrayList<Movement>();
+
+Movement right = new Movement("right");
+Movement left = new Movement("left");
+Movement noX = new Movement("noX");
+
+Movement up = new Movement("up");
+Movement down = new Movement("down");
+Movement noY = new Movement("noY");
+
 // Gestures
-String directionX;
-ArrayList<Direction> directionHistory = new ArrayList<Direction>();
-
-Direction right = new Direction("right");
-Direction left = new Direction("left");
-Direction noX = new Direction("noX");
-
-Direction up = new Direction("up");
-Direction down = new Direction("down");
-Direction noY = new Direction("noY");
-
 Gesture gesture = new Gesture();
+ArrayList<Gesture> gestureHistory = new ArrayList<Gesture>();
+int gestureCounter = 0;
 
 // Leap vars
 Hand leap_hand;

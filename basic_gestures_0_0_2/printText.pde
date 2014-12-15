@@ -56,9 +56,9 @@ void printCurrent() {
     textPositionY += textLineHeight;
     text("velocityXY: "  + dataset.velocityXY, 20, textPositionY);
     textPositionY += textLineHeight;
-    text("directionX: "  + dataset.directionX, 20, textPositionY);
+    text("movementX: "  + dataset.movementX, 20, textPositionY);
     textPositionY += textLineHeight;
-    text("directionY: "  + dataset.directionY, 20, textPositionY);
+    text("movementY: "  + dataset.movementY, 20, textPositionY);
   } else {
     text("No current data", 20, textPositionY);
     textPositionY += textLineHeight * 6;
@@ -93,7 +93,7 @@ void printGestures() {
   textPositionY += textLineHeight;
 
   if (datasets.size() > 0) {
-    text("directionX: "  + directionX, 20, textPositionY);
+    text("movementX: "  + movementX, 20, textPositionY);
     textPositionY += textLineHeight; 
 
     text("noX.counter: "  + noX.counter, 20, textPositionY);

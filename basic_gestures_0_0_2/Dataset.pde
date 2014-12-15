@@ -7,8 +7,8 @@ class Dataset {
   float distance;
   float distanceXY;
 
-  String directionX;
-  String directionY;
+  String movementX;
+  String movementY;
   
   float velocity;
   float velocityXY;
@@ -23,20 +23,20 @@ class Dataset {
       distance = PVector.dist(this.position, datasetPrev.position);
       distanceXY = dist(this.position.x, this.position.y, datasetPrev.position.x, datasetPrev.position.y);
 
-      // Get the direction of the movement
+      // Get the movement of the movement
       float differenceX = datasetPrev.position.x - this.position.x;
       float differenceY = datasetPrev.position.y - this.position.y;
 
       if (differenceX > 2) {
-        directionX = "left";
+        movementX = "left";
       } else if (differenceX < -2) {
-        directionX = "right";
+        movementX = "right";
       }
 
       if (differenceY > 2) {
-        directionY = "up";
+        movementY = "up";
       } else if (differenceY < -2) {
-        directionY = "down";
+        movementY = "down";
       }
 
       // Get the velocity of the movement

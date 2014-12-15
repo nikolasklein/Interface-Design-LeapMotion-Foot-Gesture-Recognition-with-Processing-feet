@@ -1,4 +1,4 @@
-// Keyboard inputs to trigger the text displayscc
+// Keyboard inputs to trigger the text displays
 void keyPressed() {
   if (key == TAB) {
     if (showText) { 
