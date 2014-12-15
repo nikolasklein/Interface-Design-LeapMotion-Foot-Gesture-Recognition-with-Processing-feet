@@ -26,7 +26,7 @@ class Dataset {
       distance = PVector.dist(this.position, datasetPrev.position);
       distanceXY = dist(this.position.x, this.position.y, datasetPrev.position.x, datasetPrev.position.y);
 
-      // Get the movement of the movement
+      // Get the direction of the movement
       float differenceX = datasetPrev.position.x - this.position.x;
       float differenceY = datasetPrev.position.y - this.position.y;
 

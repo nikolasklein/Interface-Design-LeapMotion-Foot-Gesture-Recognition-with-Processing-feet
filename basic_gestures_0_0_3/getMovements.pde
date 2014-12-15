@@ -7,7 +7,8 @@ void getXMovement() {
     // If it wasn't moving right before, reset the buffer, set the time, change the current movement and add it to history
     if (right.moving == false) {
       right.buffer = 0;
-      right.starttime = time;
+      right.startTime = time;
+      right.startPosition = dataset.position.x;
       right.moving = true;
       right.averageVelocity = dataset.velocity;
       movementX = "right";
@@ -16,10 +17,12 @@ void getXMovement() {
 
     // If it was moving left before update the buffer, reset the counter
     if (left.moving == true  && movementXHistorySize > 1) {
-      movementXHistory.get(movementXHistorySize-2).endtime = time;
+      movementXHistory.get(movementXHistorySize-2).endTime = time;
+      movementXHistory.get(movementXHistorySize-2).getDuration();
       movementXHistory.get(movementXHistorySize-2).moving = false;
       movementXHistory.get(movementXHistorySize-2).counter = left.counter;
-
+      movementXHistory.get(movementXHistorySize-2).endPosition = dataset.position.x;
+      movementXHistory.get(movementXHistorySize-2).getDistance();
       left.buffer = left.counter;
       left.counter = 0;
       left.averageVelocity = 0;
@@ -28,7 +31,8 @@ void getXMovement() {
 
     // If it was not moving  before update reset the counter
     if (noX.moving == true && movementXHistorySize > 1) {
-      movementXHistory.get(movementXHistorySize-2).endtime = time;
+      movementXHistory.get(movementXHistorySize-2).endTime = time;
+      movementXHistory.get(movementXHistorySize-2).getDuration();
       movementXHistory.get(movementXHistorySize-2).moving = false;
       movementXHistory.get(movementXHistorySize-2).counter = noX.counter;
 
@@ -46,7 +50,8 @@ void getXMovement() {
     // If it wasn't moving left before, reset the buffer, set the time, change the current movement and add it to history
     if (left.moving == false) {
       left.buffer = 0;
-      left.starttime = time;
+      left.startTime = time;      
+      left.startPosition = dataset.position.x;
       left.moving = true;
       left.averageVelocity = dataset.velocity;
       movementX = "left";
@@ -55,9 +60,12 @@ void getXMovement() {
 
     // If it was moving right before update the buffer, reset the counter
     if (right.moving == true && movementXHistorySize > 1) {
-      movementXHistory.get(movementXHistorySize-2).endtime = time;
+      movementXHistory.get(movementXHistorySize-2).endTime = time;
+      movementXHistory.get(movementXHistorySize-2).getDuration();
       movementXHistory.get(movementXHistorySize-2).moving = false;
       movementXHistory.get(movementXHistorySize-2).counter = right.counter;
+      movementXHistory.get(movementXHistorySize-2).endPosition = dataset.position.x;
+      movementXHistory.get(movementXHistorySize-2).getDistance();
 
       right.buffer = right.counter;
       right.counter = 0;     
@@ -67,7 +75,8 @@ void getXMovement() {
 
     // If it was not moving  before update reset the counter
     if (noX.moving == true && movementXHistorySize > 1) {
-      movementXHistory.get(movementXHistorySize-2).endtime = time;
+      movementXHistory.get(movementXHistorySize-2).endTime = time;
+      movementXHistory.get(movementXHistorySize-2).getDuration();
       movementXHistory.get(movementXHistorySize-2).moving = false;
       movementXHistory.get(movementXHistorySize-2).counter = noX.counter;
 
@@ -89,7 +98,7 @@ void getXMovement() {
     // If it wasn't not moving before, reset the buffer, set the time, change the current movement and add it to history
     if (noX.moving == false) {
       noX.buffer = 0;
-      noX.starttime = time;
+      noX.startTime = time;
       noX.moving = true;
       noX.averageVelocity = dataset.velocity;
       movementX = "noX";
@@ -98,9 +107,12 @@ void getXMovement() {
 
     // If it was moving right before update the buffer, reset the counter
     if (right.moving == true && movementXHistorySize > 1) {
-      movementXHistory.get(movementXHistorySize-2).endtime = time;
+      movementXHistory.get(movementXHistorySize-2).endTime = time;
+      movementXHistory.get(movementXHistorySize-2).getDuration();
       movementXHistory.get(movementXHistorySize-2).moving = false;
       movementXHistory.get(movementXHistorySize-2).counter = right.counter;
+      movementXHistory.get(movementXHistorySize-2).endPosition = dataset.position.x;
+      movementXHistory.get(movementXHistorySize-2).getDistance();
 
       right.buffer = right.counter;
       right.counter = 0;     
@@ -110,9 +122,12 @@ void getXMovement() {
 
     // If it was moving left before update the buffer, reset the counter
     if (left.moving == true && movementXHistorySize > 1) {
-      movementXHistory.get(movementXHistorySize-2).endtime = time;
+      movementXHistory.get(movementXHistorySize-2).endTime = time;      
+      movementXHistory.get(movementXHistorySize-2).getDuration();
       movementXHistory.get(movementXHistorySize-2).moving = false;
       movementXHistory.get(movementXHistorySize-2).counter = left.counter;
+      movementXHistory.get(movementXHistorySize-2).endPosition = dataset.position.x;
+      movementXHistory.get(movementXHistorySize-2).getDistance();
 
       left.buffer = left.counter;
       left.counter = 0;     

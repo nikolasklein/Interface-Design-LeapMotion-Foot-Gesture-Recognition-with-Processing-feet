@@ -95,10 +95,12 @@ void printGestures() {
   if (datasets.size() > 0) {
     text("movementX: "  + movementX, 20, textPositionY);
     textPositionY += textLineHeight; 
-
-    text("noX.counter: "  + noX.counter, 20, textPositionY);
+    
+    if (movementXHistory.size() > 3)  {
+    text("Distance of last movementX: "  + movementXHistory.get(movementXHistory.size()-1).duration, 20, textPositionY);
     textPositionY += textLineHeight;
-
+    }
+    
     text("left.counter: "  + left.counter, 20, textPositionY);
     textPositionY += textLineHeight;
 
