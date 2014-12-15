@@ -58,6 +58,8 @@ void draw() {
   // Read the data from the Hand object and put it into a Dataset
   readData();
 
+  getXMovement();
+
   // Search for gestures
   gestureRecognition();
 
