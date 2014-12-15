@@ -13,8 +13,9 @@ void readData() {
   }
 
   // Create a dataset with the current data
-  dataset = new Dataset(leap_hand_isset, time, posX, posY, posZ);
-
+  dataset = new Dataset(leap_hand_isset, datasetCounter, time, posX, posY, posZ);
+  datasetCounter++;
+  
   // Add the current dataset to datasets
   datasets.add(dataset);
 

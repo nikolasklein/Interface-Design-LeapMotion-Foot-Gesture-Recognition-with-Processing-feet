@@ -4,9 +4,11 @@ LeapMotion leap;
 // General vars
 int time = 0;
 
+// Datasets    
 Dataset dataset;
 Dataset datasetPrev;
 ArrayList<Dataset> datasets = new ArrayList<Dataset>();
+int datasetCounter = 0;
 
 // Movements
 String movementX;

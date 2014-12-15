@@ -2,6 +2,8 @@
 class Dataset {
   boolean tracked;
   int time;
+  int id;
+  
   PVector position = new PVector();
 
   float distance;
@@ -13,8 +15,9 @@ class Dataset {
   float velocity;
   float velocityXY;
 
-  Dataset(boolean _leap_hand_isset, int _time, float _posX, float _posY, float _posZ) {
+  Dataset(boolean _leap_hand_isset, int _id, int _time, float _posX, float _posY, float _posZ) {
     this.tracked = _leap_hand_isset;
+    this.id = _id;
     this.time = _time;
     this.position.set(_posX, _posY, _posZ);
 
